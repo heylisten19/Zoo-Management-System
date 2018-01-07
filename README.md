@@ -1,9 +1,9 @@
 # Zoo-Management-System
 
-#Git commands: <br />
-#git init <br />
-#git remote add origin https://github.com/username/Zoo-Management-System.git <br />
-#git add test.py <br />
-#git pull origin master <br />
-#git commit -m "messge goes here" test.py <br />
-#git push origin master <br />
+Git commands: <br />
+git init #this is just once when you create your repository <br />
+git remote add origin https://github.com/username/Zoo-Management-System.git #also once <br />
+git add test.py <br />
+git pull origin master <br />
+git commit -m "messge goes here" test.py <br />
+git push origin master <br />
