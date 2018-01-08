@@ -1,1 +1,5 @@
-print("Test")
+
+def sayHi():
+    print("Test")
+    word = "hello"
+    return word
