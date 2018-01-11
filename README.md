@@ -7,3 +7,6 @@ git add test.py <br />
 git pull origin master <br />
 git commit -m "messge goes here" test.py <br />
 git push origin master <br />
+
+
+https://www.sitepoint.com/getting-started-sqlite3-basic-commands/
