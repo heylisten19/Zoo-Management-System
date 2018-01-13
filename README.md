@@ -15,4 +15,6 @@ import sqlite3 <br />
 conn = sqlite3.connect('example.db') # change this with the name of the database.
 
 
-install python3-tk
+install python3-tk <br />
+
+SELECT *<table_name> # This will show the contents of the tables <br />
