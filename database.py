@@ -1,6 +1,7 @@
 import sqlite3
 import tkinter
 from tkinter import *
+import subprocess
 
 def create_connection(ZooManagement):
 	try:
@@ -33,7 +34,10 @@ def makeGUI():
     top.mainloop()		
     
 def add_column(curr, table_name, new_column, column_type):
-    curr.execute("ALTER TABLE {tn} ADD COLUMN '{nc}' {ct}".format(tn=table_name, nc=new_column, ct=column_type))
+    curr.execute("ALTER TABLE {tn} ADD COLUMN '{nc}' {ct};".format(tn=table_name, nc=new_column, ct=column_type))
+    
+def edit_cell(curr, table_name, column, new_info, row_name):
+    curr.execute("UPDATE {tn} SET '{cn}' = {info} WHERE type = '{row}';".format(tn=table_name, cn=column, info=new_info, row=row_name))
     
 
 def main():
@@ -41,11 +45,12 @@ def main():
 	database = "ZooManagement.db"
 	conn = create_connection(database)
 	curr = conn.cursor()
-	#curr.execute('.headers on')
-	#curr.execute(".mode column")
+	#add_column(curr, "dinosaurs", "Days Since Last Bath", "INTEGER")
+	edit_cell(curr, "dinosaurs", "Days Since Last Bath", 4, "Hippo")
+	
 	with conn:
 		select(conn)
-	#add_column(curr, "dinosaurs", "Days Since Last Bath", "INTEGER")
+	conn.commit()
 	makeGUI()
 	
 
