@@ -1,4 +1,6 @@
 import sqlite3
+import tkinter
+from tkinter import *
 
 def create_connection(ZooManagement):
 	try:
@@ -12,10 +14,24 @@ def select(conn):
 	curr.execute("select * from dinosaurs")
 
 	rows = curr.fetchall()
-	with open('hello.txt', 'w') as f:
+	with open('outputforgui.txt', 'w') as f:
 		for row in rows:
 			print (row)
 			f.write("%s\n" % str(row))
+			
+def makeGUI():
+    top = tkinter.Tk()
+
+    t = Text(top,height = 30, width = 30)
+    t.pack()
+
+    f = open("outputforgui.txt")
+    data = f.read()
+    f.close()
+    t.insert(END, data)
+
+
+    top.mainloop()			
 
 def main():
 
@@ -25,6 +41,8 @@ def main():
 	with conn:
 		print("All Tasks:")
 		select(conn)
+	makeGUI()
+	
 
 
 if __name__ == '__main__':
