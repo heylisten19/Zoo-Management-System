@@ -2,6 +2,8 @@ import sqlite3
 import tkinter
 from tkinter import *
 import subprocess
+from datetime import datetime, timedelta
+import time
 
 def create_connection(ZooManagement):
 	try:
@@ -39,15 +41,26 @@ def add_column(curr, table_name, new_column, column_type):
 def edit_cell(curr, table_name, column, new_info, row_name):
     curr.execute("UPDATE {tn} SET '{cn}' = {info} WHERE type = '{row}';".format(tn=table_name, cn=column, info=new_info, row=row_name))
     
+def update_days_since_bath(curr):
+    curr.execute("UPDATE dinosaurs SET 'Days Since Last Bath' = Cast(julianday('now') - julianday(Day_Of_Last_Bath) as Integer)")
+
+def wash_dino(curr, dino):
+    curr.execute("UPDATE dinosaurs SET 'Day_Of_Last_Bath' = CURRENT_TIMESTAMP WHERE type = '{d}'".format(d =dino))
+    
+def wash_all_dinos(curr):
+    curr.execute("UPDATE dinosaurs SET 'Day_Of_Last_Bath' = CURRENT_TIMESTAMP")
+    
 
 def main():
 
 	database = "ZooManagement.db"
 	conn = create_connection(database)
 	curr = conn.cursor()
-	#add_column(curr, "dinosaurs", "Days Since Last Bath", "INTEGER")
-	edit_cell(curr, "dinosaurs", "Days Since Last Bath", 4, "Hippo")
-	
+	#add_column(curr, "dinosaurs", "Day_Of_Last_Bath", "INTEGER")
+	#edit_cell(curr, "dinosaurs", "Days Since Last Bath", 4, "Hippo")
+	#wash_all_dinos(curr)
+	#wash_dino(curr, "Hippo")
+	update_days_since_bath(curr)
 	with conn:
 		select(conn)
 	conn.commit()
