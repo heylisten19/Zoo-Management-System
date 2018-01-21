@@ -12,9 +12,9 @@ def create_connection(ZooManagement):
 	except Error as e:
 		print(e)
 
-def select(conn):
+def select(conn, table):
     curr = conn.cursor()
-    curr.execute("select * from dinosaurs")
+    curr.execute("select * from {tn}".format(tn=table))
     rows = curr.fetchall()
     with open('outputforgui.txt', 'w') as f:
         for row in rows:
@@ -45,10 +45,46 @@ def update_days_since_bath(curr):
     curr.execute("UPDATE dinosaurs SET 'Days Since Last Bath' = Cast(julianday('now') - julianday(Day_Of_Last_Bath) as Integer)")
 
 def wash_dino(curr, dino):
+    #add_column(curr, "dinosaurs", "Day_Of_Last_Bath", "INTEGER")
     curr.execute("UPDATE dinosaurs SET 'Day_Of_Last_Bath' = CURRENT_TIMESTAMP WHERE type = '{d}'".format(d =dino))
     
 def wash_all_dinos(curr):
     curr.execute("UPDATE dinosaurs SET 'Day_Of_Last_Bath' = CURRENT_TIMESTAMP")
+
+def populate_food_types(curr):
+    #add_column(curr, "dinosaurs", "Type_Of_Food", "TEXT")
+	edit_cell(curr, "dinosaurs", "Type_Of_Food", "'Meat'", "T-Rex")
+	edit_cell(curr, "dinosaurs", "Type_Of_Food", "'Vegetables'", "Hippo")
+	edit_cell(curr, "dinosaurs", "Type_Of_Food", "'Vegetables'", "Triceratop")
+	edit_cell(curr, "dinosaurs", "Type_Of_Food", "'Meat'", "Velociraptor")
+	edit_cell(curr, "dinosaurs", "Type_Of_Food", "'Vegetables'", "Stegosaurus")
+	edit_cell(curr, "dinosaurs", "Type_Of_Food", "'Vegetables'", "Brachiosaurus")
+	edit_cell(curr, "dinosaurs", "Type_Of_Food", "'Vegetables'", "Iguanadon")
+	edit_cell(curr, "dinosaurs", "Type_Of_Food", "'Meat'", "Megalosaurus")
+	edit_cell(curr, "dinosaurs", "Type_Of_Food", "'Vegetables'", "Brontosaurus")
+	edit_cell(curr, "dinosaurs", "Type_Of_Food", "'Meat'", "Crocodile")
+	
+def populate_food_per_day(curr):
+    #add_column(curr, "dinosaurs", "Pounds_of_Food_Per_Day", "INTEGER")
+    edit_cell(curr, "dinosaurs", "Pounds_of_Food_Per_Day", 200, "T-Rex")
+    edit_cell(curr, "dinosaurs", "Pounds_of_Food_Per_Day", 88, "Hippo")
+    edit_cell(curr, "dinosaurs", "Pounds_of_Food_Per_Day", 175, "Triceratop")
+    edit_cell(curr, "dinosaurs", "Pounds_of_Food_Per_Day", 100, "Velociraptor")
+    edit_cell(curr, "dinosaurs", "Pounds_of_Food_Per_Day", 125, "Stegosaurus")
+    edit_cell(curr, "dinosaurs", "Pounds_of_Food_Per_Day", 200, "Brachiosaurus")
+    edit_cell(curr, "dinosaurs", "Pounds_of_Food_Per_Day", 150, "Iguanadon")
+    edit_cell(curr, "dinosaurs", "Pounds_of_Food_Per_Day", 150, "Megalosaurus")
+    edit_cell(curr, "dinosaurs", "Pounds_of_Food_Per_Day", 200, "Brontosaurus")
+    edit_cell(curr, "dinosaurs", "Pounds_of_Food_Per_Day", 100, "Crocodile")
+    
+def supplies_in_stock(curr):
+    #add_column(curr, "Supplies_In_Stock", "type", "TEXT")
+    #add_column(curr, "Supplies_In_Stock", "amount", "INTEGER")
+    edit_cell(curr, "Supplies_In_Stock", "amount", 2000, "Vegetables")
+    edit_cell(curr, "Supplies_In_Stock", "amount", 3000, "Meat")
+    
+#def eat(curr):
+    
     
 
 def main():
@@ -56,13 +92,15 @@ def main():
 	database = "ZooManagement.db"
 	conn = create_connection(database)
 	curr = conn.cursor()
-	#add_column(curr, "dinosaurs", "Day_Of_Last_Bath", "INTEGER")
-	#edit_cell(curr, "dinosaurs", "Days Since Last Bath", 4, "Hippo")
 	#wash_all_dinos(curr)
 	#wash_dino(curr, "Hippo")
-	update_days_since_bath(curr)
+	#update_days_since_bath(curr)
+	#populate_food_types(curr)
+	#populate_food_per_day(curr)
+	supplies_in_stock(curr)
 	with conn:
-		select(conn)
+		#select(conn, "dinosaurs")
+		select(conn, "Supplies_In_Stock")
 	conn.commit()
 	makeGUI()
 	
