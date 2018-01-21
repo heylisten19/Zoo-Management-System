@@ -9,14 +9,14 @@ def create_connection(ZooManagement):
 
 def select(conn):
 	curr = conn.cursor()
-	curr.execute("select * from dinosaurs")
-
+	curr.execute("select size from reservations")
 	rows = curr.fetchall()
-	with open('hello.txt', 'w') as f:
-		for row in rows:
-			print (row)
-			f.write("%s\n" % str(row))
-
+	size = rows
+	for row in rows:
+		total_size = sum(int(size[int(row)]))
+		print (total_size)
+		
+		
 def main():
 
 	database = "ZooManagement.db"
@@ -25,9 +25,9 @@ def main():
 	with conn:
 		print("All Tasks:")
 		select(conn)
-CREATE TABLE reservation ( 
+'''CREATE TABLE reservations ( 
 	name INTEGER NOT NULL, 
-	size TEXT NULL);
+	size TEXT NULL);'''
 
 
 if __name__ == '__main__':
