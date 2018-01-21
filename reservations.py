@@ -7,14 +7,21 @@ def create_connection(ZooManagement):
 	except Error as e:
 		print(e)
 
-def select(conn):
+def select_for_reservations(conn):
 	curr = conn.cursor()
 	curr.execute("select size from reservations")
 	rows = curr.fetchall()
-	size = rows
+	cap = 150 # this is the total amount of spaces for the reservations
+	total = 0
 	for row in rows:
-		total_size = sum(int(size[int(row)]))
-		print (total_size)
+		#print(row[0])
+		total = row[0] + total
+	print(total)
+	if (total > cap):
+		print("There are no spaces left")
+	else:
+		print("There are ", cap - total, " spaces left")
+		
 		
 		
 def main():
@@ -24,10 +31,8 @@ def main():
 	conn = create_connection(database)
 	with conn:
 		print("All Tasks:")
-		select(conn)
-'''CREATE TABLE reservations ( 
-	name INTEGER NOT NULL, 
-	size TEXT NULL);'''
+		select_for_reservations(conn)
+
 
 
 if __name__ == '__main__':
