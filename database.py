@@ -105,6 +105,31 @@ def feed_dinos(curr):
     new_stock_veg_num = stock_veg_pounds - total_veg_eaten
     edit_cell(curr, "Supplies_In_Stock", "amount", new_stock_veg_num, "Vegetables")
     edit_cell(curr, "Supplies_In_Stock", "amount", new_stock_meat_num, "Meat")
+    if(new_stock_veg_num <= 0):
+        edit_cell(curr, "Supplies_In_Stock", "amount", 0, "Vegetables")
+        notification = "Out of vegetables. Order more."
+    if(new_stock_meat_num <= 0):
+        edit_cell(curr, "Supplies_In_Stock", "amount", 0, "Meat")
+        notification = "Out of meat. Order more."
+    print(notification)
+    
+def order_more_supplies(curr, how_many, item):
+    curr.execute("select Cost_Per_Unit from Supplies_In_Stock where type = '{i}'".format(i=item))
+    cost = curr.fetchall()[0][0] * how_many
+    curr.execute("select amount from Supplies_In_Stock where type = 'Money'")
+    money = curr.fetchone()[0]
+    
+    if money >= cost:
+        money = money - cost
+        edit_cell(curr, "Supplies_In_Stock", "amount", money, 'Money')
+        
+        curr.execute("select amount from Supplies_In_Stock where type = '{i}'".format(i=item))
+        amount_in_stock = curr.fetchall()[0][0]
+        total = amount_in_stock + how_many
+        edit_cell(curr, "Supplies_In_Stock", "amount", total, item)
+        
+    else:
+        print("Cannot purchase. You do not have enough money.")
 
 def main():
 
@@ -116,8 +141,9 @@ def main():
 	#update_days_since_bath(curr)
 	#populate_food_types(curr)
 	#populate_food_per_day(curr)
-	#supplies_in_stock(curr)
-	feed_dinos(curr)
+	#populate_supplies_in_stock(curr)
+	#feed_dinos(curr)
+	order_more_supplies(curr, 10000000000, 'Vegetables')
 	with conn:
 		#select(conn, "dinosaurs")
 		select(conn, "Supplies_In_Stock")
