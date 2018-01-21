@@ -77,15 +77,34 @@ def populate_food_per_day(curr):
     edit_cell(curr, "dinosaurs", "Pounds_of_Food_Per_Day", 200, "Brontosaurus")
     edit_cell(curr, "dinosaurs", "Pounds_of_Food_Per_Day", 100, "Crocodile")
     
-def supplies_in_stock(curr):
+def populate_supplies_in_stock(curr):
     #add_column(curr, "Supplies_In_Stock", "type", "TEXT")
     #add_column(curr, "Supplies_In_Stock", "amount", "INTEGER")
     edit_cell(curr, "Supplies_In_Stock", "amount", 2000, "Vegetables")
     edit_cell(curr, "Supplies_In_Stock", "amount", 3000, "Meat")
     
-#def eat(curr):
+def feed_dinos(curr):
+    #get daily totals
+    curr.execute("select Pounds_of_Food_Per_Day from dinosaurs where Type_Of_Food = 'Meat'")
+    total_meat_eaten = 0
+    total_veg_eaten = 0
+    list_of_meat_pounds = curr.fetchall()
+    for num in list_of_meat_pounds:
+        total_meat_eaten = total_meat_eaten + num[0]
+    curr.execute("select Pounds_of_Food_Per_Day from dinosaurs where Type_Of_Food = 'Vegetables'")
+    list_of_veg_pounds = curr.fetchall()
+    for num in list_of_veg_pounds:
+        total_veg_eaten = total_veg_eaten + num[0]
     
-    
+    #subtract totals from stockpile
+    curr.execute("select amount from Supplies_In_Stock where type = 'Meat'")
+    stock_meat_pounds = curr.fetchall()[0][0]
+    new_stock_meat_num = stock_meat_pounds - total_meat_eaten
+    curr.execute("select amount from Supplies_In_Stock where type = 'Vegetables'")
+    stock_veg_pounds = curr.fetchall()[0][0]
+    new_stock_veg_num = stock_veg_pounds - total_veg_eaten
+    edit_cell(curr, "Supplies_In_Stock", "amount", new_stock_veg_num, "Vegetables")
+    edit_cell(curr, "Supplies_In_Stock", "amount", new_stock_meat_num, "Meat")
 
 def main():
 
@@ -97,7 +116,8 @@ def main():
 	#update_days_since_bath(curr)
 	#populate_food_types(curr)
 	#populate_food_per_day(curr)
-	supplies_in_stock(curr)
+	#supplies_in_stock(curr)
+	feed_dinos(curr)
 	with conn:
 		#select(conn, "dinosaurs")
 		select(conn, "Supplies_In_Stock")
