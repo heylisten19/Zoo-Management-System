@@ -9,18 +9,20 @@ def create_connection(ZooManagement):
 
 def select_for_reservations(conn):
 	curr = conn.cursor()
+	curr.execute("select Maximum_Size from reservations")
+	cap = curr.fetchall()
 	curr.execute("select size from reservations")
 	rows = curr.fetchall()
-	cap = 150 # this is the total amount of spaces for the reservations
+	#cap = 150 # this is the total amount of spaces for the reservations
 	total = 0
-	for row in rows:
-		#print(row[0])
+	for row in rows[0:3]:
+		print(row[0])
 		total = row[0] + total
-	print(total)
+	#print("The total sptotal")
 	if (total > cap):
-		print("There are no spaces left")
+		print("There is not enough space for this reservation")
 	else:
-		print("There are ", cap - total, " spaces left")
+		print("There are %d spaces left" % (cap[3][0] - total))
 		
 		
 		
