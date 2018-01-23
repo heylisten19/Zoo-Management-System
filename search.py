@@ -11,21 +11,32 @@ def create_connection(ZooManagement):
 	except Error as e:
 		print(e)
   
-def specific_search(conn,column):
+def specific_search(conn,column,label):
 	cur = conn.cursor()
 	cur.execute("SELECT type, {cn} FROM dinosaurs".format(cn = column))
  
 	rows = cur.fetchall()
 	with open('searchoutput.txt', 'w') as f:
-		for row in rows:
-			print(row)
-			f.write("%s\n" % str(row))
+		print("|	TYPE			|		" + label + "				|\n ",file=f )
+		for item in rows:
+			print("|	" + str(item[0]) + "			|		" + str(item[1]) + "				|",file =f)		
+	
+				
+		#for row in rows:
+		#	print(row)
+		#	f.write("%s\n" % str(row))
+#def header(label):
+#	print("| Type | ", label, " |")
+
 def makeGUI():
     top = tkinter.Tk()
-    top.title("Outcome Of the Search")
+    top.title("Search Results")
     t = Text(top,height = 30, width = 100)
     t.pack()
-
+    #v = ("| Type | ", label, " |")
+    #label1 = Label(t, text = v )
+    #label1.pack()
+    
     f = open("searchoutput.txt")
     data = f.read()
     f.close()
@@ -46,7 +57,7 @@ label = Label(frame, text = "What would you like to search for?")
 label.pack()
 search = StringVar()
 search.set("")
-option = OptionMenu(frame, search, "Age", "Medicine", "Bath")
+option = OptionMenu(frame, search, "Age", "Medicine", "Last Bath", "Food Type","Food Per Day")
 option.pack()
 #entry_box = Entry(t, textvariable = search).place(x=80, y= 50)
 def search_criteria():
@@ -54,17 +65,21 @@ def search_criteria():
         database = "ZooManagement.db"
         # create a database connection
         conn = create_connection(database)
-        if(string == "Medicine"):
-                with conn:
-                        specific_search(conn, "medicines")
-                makeGUI()
-        elif(string == "Age"):
-                with conn:
-                        specific_search(conn, "age")
-                makeGUI()
-        else:
-                print("This search did not work")
-
+        with conn:
+                if(string == "Medicine"):
+                        specific_search(conn, "medicines", "MEDICINE")
+                elif(string == "Age"):
+                        specific_search(conn, "age", "AGE")
+                elif(string == "Food Type"):
+                        specific_search(conn, "Type_Of_Food", "TYPE OF FOOD")
+               # elif(string == "Last Bath"):
+                #        specific_search(conn, ""Days Since Last Bath"", "LAST BATH (in Days)")
+                 #       makeGUI()
+                elif(string == "Food Per Day"):
+                        specific_search(conn, "Pounds_of_Food_Per_Day", "Food Per Day (in lbs)")
+                else:
+                        print("This search did not work")
+        makeGUI()
 	#if (string == "medicines"):
 		
 	#else:
