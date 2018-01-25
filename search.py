@@ -11,7 +11,7 @@ def create_connection(ZooManagement):
 	except Error as e:
 		print(e)
   
-def specific_search(conn,column,label):
+def dinosaur_search(conn,column,label):
 	cur = conn.cursor()
 	cur.execute("SELECT type, {cn} FROM dinosaurs".format(cn = column))
  
@@ -22,11 +22,14 @@ def specific_search(conn,column,label):
 			print("|	" + str(item[0]) + "			|		" + str(item[1]) + "				|",file =f)		
 	
 				
-		#for row in rows:
-		#	print(row)
-		#	f.write("%s\n" % str(row))
-#def header(label):
-#	print("| Type | ", label, " |")
+def supplies_search(conn):
+	cur = conn.cursor()
+	cur.execute("SELECT * FROM Supplies_In_Stock")
+	rows = cur.fetchall()
+	with open('searchoutput.txt', 'w') as f:
+		print("|	TYPE OF FOOD		|		AMOUNT		|	COST PER UNIT			|\n ", file=f)
+		for item in rows:
+			print("|	" + str(item[0]) + "		|		" + str(item[1]) + "		|		" +str(item[2]) + "		|", file = f)
 
 def makeGUI():
     top = tkinter.Tk()
@@ -57,7 +60,7 @@ label = Label(frame, text = "What would you like to search for?")
 label.pack()
 search = StringVar()
 search.set("")
-option = OptionMenu(frame, search, "Age", "Medicine", "Last Bath", "Food Type","Food Per Day")
+option = OptionMenu(frame, search, "Age", "Medicine", "Last Bath", "Food Type","Food Per Day", "Supplies")
 option.pack()
 #entry_box = Entry(t, textvariable = search).place(x=80, y= 50)
 def search_criteria():
@@ -67,16 +70,17 @@ def search_criteria():
         conn = create_connection(database)
         with conn:
                 if(string == "Medicine"):
-                        specific_search(conn, "medicines", "MEDICINE")
+                        dinosaur_search(conn, "medicines", "MEDICINE")
                 elif(string == "Age"):
-                        specific_search(conn, "age", "AGE")
+                        dinosaur_search(conn, "age", "AGE")
                 elif(string == "Food Type"):
-                        specific_search(conn, "Type_Of_Food", "TYPE OF FOOD")
-               # elif(string == "Last Bath"):
-                #        specific_search(conn, ""Days Since Last Bath"", "LAST BATH (in Days)")
-                 #       makeGUI()
+                        dinosaur_search(conn, "Type_Of_Food", "TYPE OF FOOD")
+                elif(string == "Last Bath"):
+                        dinosaur_search(conn, "Days_Since_Last_Bath", "LAST BATH (in Days)")
                 elif(string == "Food Per Day"):
-                        specific_search(conn, "Pounds_of_Food_Per_Day", "Food Per Day (in lbs)")
+                        dinosaur_search(conn, "Pounds_of_Food_Per_Day", "Food Per Day (in lbs)")
+                elif(string == "Supplies"):
+                        supplies_search(conn)
                 else:
                         print("This search did not work")
         makeGUI()
