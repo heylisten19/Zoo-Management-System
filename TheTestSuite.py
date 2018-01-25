@@ -12,3 +12,8 @@ class Testing(unittest.TestCase):
         
 if __name__ == '__main__':
     unittest.main()
+    
+#example of calling the test case. this would be in another program
+#def sayHi():
+ #   word = 'hello'
+ #   return word
