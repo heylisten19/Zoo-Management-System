@@ -108,10 +108,11 @@ def feed_dinos(curr):
     if(new_stock_veg_num <= 0):
         edit_cell(curr, "Supplies_In_Stock", "amount", 0, "Vegetables")
         notification = "Out of vegetables. Order more."
+        print(notification)
     if(new_stock_meat_num <= 0):
         edit_cell(curr, "Supplies_In_Stock", "amount", 0, "Meat")
         notification = "Out of meat. Order more."
-    print(notification)
+        print(notification)
     
 def order_more_supplies(curr, how_many, item):
     curr.execute("select Cost_Per_Unit from Supplies_In_Stock where type = '{i}'".format(i=item))
@@ -130,6 +131,27 @@ def order_more_supplies(curr, how_many, item):
         
     else:
         print("Cannot purchase. You do not have enough money.")
+        
+def seats_unreserved(conn):
+	curr = conn.cursor()
+	curr.execute("select Maximum_Size from reservations")
+	cap = curr.fetchall()[3][0]
+	curr.execute("select size from reservations")
+	rows = curr.fetchall()
+	#cap = 150 # this is the total amount of spaces for the reservations
+	total = 0
+	for row in rows[0:3]:
+		total = row[0] + total
+	if (total > cap):
+		print("There is not enough space for this reservation")
+	else:
+		print("There are %d spaces left" % (cap - total))
+		
+def SellTickets():
+	price = 15	
+	tickets_sold = input("Enter number of tickets sold:  ")
+	profit = int(tickets_sold) * price
+	print("We made $%s from ticket sales today" %(profit))
 
 def main():
 
@@ -143,7 +165,10 @@ def main():
 	#populate_food_per_day(curr)
 	#populate_supplies_in_stock(curr)
 	#feed_dinos(curr)
-	order_more_supplies(curr, 10000000000, 'Vegetables')
+	#order_more_supplies(curr, 10000, 'Vegetables')
+	#order_more_supplies(curr, 10000, 'Meat')
+	SellTickets()
+	#seats_unreserved(conn)
 	with conn:
 		#select(conn, "dinosaurs")
 		select(conn, "Supplies_In_Stock")
