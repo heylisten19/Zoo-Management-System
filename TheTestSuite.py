@@ -77,14 +77,20 @@ class Testing(unittest.TestCase):
         database.order_more_supplies(curr, 1, "Vegetables")
         curr.execute("select amount from Supplies_In_Stock where type = 'Money'")
         after = curr.fetchall()[0][0]
-        print(before)
-        print(after)
         if before == 0:
             self.assertEqual(before, after)
         else:
             self.assertIsNot(before, after)
     
-    
+    def test_seats_unreserved(self):
+        conn = database.create_connection("ZooManagement.db")
+        seats_taken = database.seats_unreserved(conn)
+        self.assertIsNotNone(seats_taken)
+        
+    def test_sellTickets(self):
+        conn = database.create_connection("ZooManagement.db")
+        profit = database.SellTickets()
+        self.assertIsNotNone(profit)
     
     
     
