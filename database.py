@@ -1,7 +1,6 @@
 import sqlite3
 import tkinter
 from tkinter import *
-import subprocess
 from datetime import datetime, timedelta
 import time
 
@@ -144,15 +143,19 @@ def seats_unreserved(conn):
 	for row in rows[0:3]:
 		total = row[0] + total
 	if (total > cap):
-		print("There is not enough space for this reservation")
+		print("There is not enough space for this reservation.")
 	else:
-		print("There are %d spaces left" % (cap - total))
+		print("There are %d spaces left." % (cap - total))
+	
+	return total
+		
 		
 def SellTickets():
 	price = 15	
 	tickets_sold = input("Enter number of tickets sold:  ")
 	profit = int(tickets_sold) * price
 	print("We made $%s from ticket sales today" %(profit))
+	return profit
 
 def main():
 
