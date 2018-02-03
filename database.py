@@ -15,7 +15,7 @@ def create_connection(ZooManagement):
 def select(conn, table):
     curr = conn.cursor()
     curr.execute("select * from {tn}".format(tn=table))
-    rows = curr.fetchall()
+    rows = curr.fetchall() 
     with open('outputforgui.txt', 'w') as f:
         for row in rows:
             print (row)
@@ -42,14 +42,15 @@ def edit_cell(curr, table_name, column, new_info, row_name):
     curr.execute("UPDATE {tn} SET '{cn}' = {info} WHERE type = '{row}';".format(tn=table_name, cn=column, info=new_info, row=row_name))
     
 def update_days_since_bath(curr):
-    curr.execute("UPDATE dinosaurs SET 'Days Since Last Bath' = Cast(julianday('now') - julianday(Day_Of_Last_Bath) as Integer)")
+    curr.execute("UPDATE dinosaurs SET 'Days_Since_Last_Bath' = Cast(julianday('now') - julianday(Day_Of_Last_Bath) as Integer)")
 
 def wash_dino(curr, dino):
     #add_column(curr, "dinosaurs", "Day_Of_Last_Bath", "INTEGER")
-    curr.execute("UPDATE dinosaurs SET 'Day_Of_Last_Bath' = CURRENT_TIMESTAMP WHERE type = '{d}'".format(d =dino))
+    #curr.execute("UPDATE dinosaurs SET 'Day_Of_Last_Bath' = CURRENT_TIMESTAMP WHERE type = '{d}'".format(d =dino))
+    curr.execute("UPDATE dinosaurs SET 'Day_Of_Last_Bath' = datetime('now','localtime') WHERE type = '{d}'".format(d =dino))
     
 def wash_all_dinos(curr):
-    curr.execute("UPDATE dinosaurs SET 'Day_Of_Last_Bath' = CURRENT_TIMESTAMP")
+    curr.execute("UPDATE dinosaurs SET 'Day_Of_Last_Bath' = datetime('now','localtime')")
 
 def populate_food_types(curr):
     #add_column(curr, "dinosaurs", "Type_Of_Food", "TEXT")
@@ -157,6 +158,7 @@ def main():
 
 	database = "ZooManagement.db"
 	conn = create_connection(database)
+	print(conn)
 	curr = conn.cursor()
 	#wash_all_dinos(curr)
 	#wash_dino(curr, "Hippo")
@@ -167,7 +169,7 @@ def main():
 	#feed_dinos(curr)
 	#order_more_supplies(curr, 10000, 'Vegetables')
 	#order_more_supplies(curr, 10000, 'Meat')
-	SellTickets()
+	#SellTickets()
 	#seats_unreserved(conn)
 	with conn:
 		#select(conn, "dinosaurs")
