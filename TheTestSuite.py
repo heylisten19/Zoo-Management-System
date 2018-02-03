@@ -56,9 +56,19 @@ class Testing(unittest.TestCase):
        curr.execute("select amount from Supplies_In_Stock")
        self.assertIsNotNone(curr.fetchall())
        
-   # def test_feed_dinos():
-    #    
-    
-        
+    def test_feed_dinos(self):   
+        conn = database.create_connection("ZooManagement.db")
+        curr = conn.cursor()
+        curr.execute("select amount from Supplies_In_Stock where type = 'Meat'")
+        before = curr.fetchall()[0][0]
+        database.feed_dinos(curr)
+        curr.execute("select amount from Supplies_In_Stock where type = 'Meat'")
+        after = curr.fetchall()[0][0]
+        print(before)
+        print(after)
+        if before == 0:
+            self.assertEqual(before, after)
+        else:
+            self.assertIsNot(before, after)
 if __name__ == '__main__':
     unittest.main()
