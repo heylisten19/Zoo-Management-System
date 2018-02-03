@@ -56,7 +56,7 @@ class Testing(unittest.TestCase): # Currently: 16 test cases
 		curr.execute("select amount from Supplies_In_Stock")
 		self.assertIsNotNone(curr.fetchall())
 
-def test_seats_unreserved_names_who_reserved_seats(self): # Print the names of those who reserved seats
+	def test_seats_unreserved_names_who_reserved_seats(self): # Print the names of those who reserved seats
 		conn = database.create_connection("ZooManagement.db")
 		curr = conn.cursor()
 		database.seats_unreserved(conn)
