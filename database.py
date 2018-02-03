@@ -1,9 +1,13 @@
 import sqlite3
 import tkinter
 from tkinter import *
+import subprocess
 from datetime import datetime, timedelta
 import time
 
+tickets_sold = 0 # initialize to zero for the test cases
+total = 0
+cap = 0
 def create_connection(ZooManagement):
 	try:
 		conn = sqlite3.connect('ZooManagement.db')
@@ -14,7 +18,7 @@ def create_connection(ZooManagement):
 def select(conn, table):
     curr = conn.cursor()
     curr.execute("select * from {tn}".format(tn=table))
-    rows = curr.fetchall() 
+    rows = curr.fetchall()
     with open('outputforgui.txt', 'w') as f:
         for row in rows:
             print (row)
@@ -41,15 +45,14 @@ def edit_cell(curr, table_name, column, new_info, row_name):
     curr.execute("UPDATE {tn} SET '{cn}' = {info} WHERE type = '{row}';".format(tn=table_name, cn=column, info=new_info, row=row_name))
     
 def update_days_since_bath(curr):
-    curr.execute("UPDATE dinosaurs SET 'Days_Since_Last_Bath' = Cast(julianday('now') - julianday(Day_Of_Last_Bath) as Integer)")
+    curr.execute("UPDATE dinosaurs SET 'Days Since Last Bath' = Cast(julianday('now') - julianday(Day_Of_Last_Bath) as Integer)")
 
 def wash_dino(curr, dino):
     #add_column(curr, "dinosaurs", "Day_Of_Last_Bath", "INTEGER")
-    #curr.execute("UPDATE dinosaurs SET 'Day_Of_Last_Bath' = CURRENT_TIMESTAMP WHERE type = '{d}'".format(d =dino))
-    curr.execute("UPDATE dinosaurs SET 'Day_Of_Last_Bath' = datetime('now','localtime') WHERE type = '{d}'".format(d =dino))
+    curr.execute("UPDATE dinosaurs SET 'Day_Of_Last_Bath' = CURRENT_TIMESTAMP WHERE type = '{d}'".format(d =dino))
     
 def wash_all_dinos(curr):
-    curr.execute("UPDATE dinosaurs SET 'Day_Of_Last_Bath' = datetime('now','localtime')")
+    curr.execute("UPDATE dinosaurs SET 'Day_Of_Last_Bath' = CURRENT_TIMESTAMP")
 
 def populate_food_types(curr):
     #add_column(curr, "dinosaurs", "Type_Of_Food", "TEXT")
@@ -132,7 +135,7 @@ def order_more_supplies(curr, how_many, item):
     else:
         print("Cannot purchase. You do not have enough money.")
         
-def seats_unreserved(conn):
+def seats_unreserved(conn, total, cap):
 	curr = conn.cursor()
 	curr.execute("select Maximum_Size from reservations")
 	cap = curr.fetchall()[3][0]
@@ -143,25 +146,24 @@ def seats_unreserved(conn):
 	for row in rows[0:3]:
 		total = row[0] + total
 	if (total > cap):
-		print("There is not enough space for this reservation.")
+		print("There is not enough space for this reservation")
 	else:
-		print("There are %d spaces left." % (cap - total))
-	
-	return total
+		print("There are %d spaces left" % (cap - total))
 		
 		
-def SellTickets():
+def SellTickets(tickets_sold):
 	price = 15	
 	tickets_sold = input("Enter number of tickets sold:  ")
+	tickets_sold = int(tickets_sold)
+	if tickets_sold < 0:
+		raise ValueError("Cannot sell negative tickets")
 	profit = int(tickets_sold) * price
 	print("We made $%s from ticket sales today" %(profit))
-	return profit
 
 def main():
 
 	database = "ZooManagement.db"
 	conn = create_connection(database)
-	print(conn)
 	curr = conn.cursor()
 	#wash_all_dinos(curr)
 	#wash_dino(curr, "Hippo")
@@ -172,8 +174,8 @@ def main():
 	#feed_dinos(curr)
 	#order_more_supplies(curr, 10000, 'Vegetables')
 	#order_more_supplies(curr, 10000, 'Meat')
-	#SellTickets()
-	#seats_unreserved(conn)
+	SellTickets(tickets_sold)
+	#seats_unreserved(conn, total, cap)
 	with conn:
 		#select(conn, "dinosaurs")
 		select(conn, "Supplies_In_Stock")
