@@ -90,6 +90,20 @@ class Testing(unittest.TestCase): # Currently: 16 test cases
 		cap = 150
 		database.seats_unreserved(conn, total, cap)
 		self.assertEqual(cap - total, 40)
+	def test_SellTickets(self):
+		# Raise error for negative tickets sold
+		tickets_sold = -1
+		database.SellTickets(tickets_sold)
+		self.assertRaises(ValueError, SellTickets, -1) #Raise error if Sold Tickets is negative
+			
+	def test_SellTickets(self):
+		#Test for valid tickets_sold
+		tickets_sold = 0
+		database.SellTickets(tickets_sold)
+		self.assertGreaterEqual(tickets_sold, 0)
+		print("Cool profit bro")
+
+
 
 
     
