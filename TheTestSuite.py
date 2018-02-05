@@ -103,12 +103,6 @@ class Testing(unittest.TestCase): # Currently: 16 test cases
 		self.assertGreaterEqual(tickets_sold, 0)
 		print("Cool profit bro")
 
-
-
-
-    
-   # def test_feed_dinos():
-    #    
     
         
 if __name__ == '__main__':
