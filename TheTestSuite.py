@@ -101,7 +101,7 @@ class Testing(unittest.TestCase): # Currently: 16 test cases
 		tickets_sold = 0
 		database.SellTickets(tickets_sold)
 		self.assertGreaterEqual(tickets_sold, 0)
-		print("Cool profit bro")
+		
 
     
         
